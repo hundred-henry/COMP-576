@@ -105,7 +105,8 @@ class Net(nn.Module):
     def forward(self, x):
 
         x = F.max_pool2d(F.relu(self.conv1(x)), 2)
-        x = F.max_pool2d(F.relu(self.conv2_drop(self.conv2(x))), 2)
+        # x = F.max_pool2d(F.relu(self.conv2_drop(self.conv2(x))), 2)
+        x = F.max_pool2d(F.relu(self.conv2(x)), 2)
         x = x.view(-1, 64*4*4)
         x = F.relu(self.fc1(x))
         x = F.dropout(x, training=self.training, p=0.5)
@@ -134,7 +135,7 @@ def train(epoch):
 
         optimizer.zero_grad()
         output = model(data)
-        loss = criterion(torch.log(output+eps), target) # = sum_k(-t_k * log(y_k))
+        loss = criterion(torch.log(output+eps), target)
         loss.backward()
         optimizer.step()
 
@@ -164,8 +165,8 @@ def test(epoch):
 
         output = model(data)
 
-        test_loss += criterion(torch.log(output+eps), target,).item() # sum up batch loss (later, averaged over all test samples)
-        pred = output.argmax(dim=1, keepdim=True)  # get the index of the max log-probability
+        test_loss += criterion(torch.log(output+eps), target,).item()
+        pred = output.argmax(dim=1, keepdim=True)
         correct += pred.eq(target.view_as(pred)).sum().item()
 
     test_loss /= len(test_loader.dataset)
@@ -179,7 +180,6 @@ def test(epoch):
     writer.add_scalar('Test/Loss', test_loss, n_iter)
     writer.add_scalar('Test/Accuracy', test_accuracy, n_iter)
 
-# Training loop
 
 for epoch in range(epochs):
     train(epoch)
