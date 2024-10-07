@@ -1,4 +1,4 @@
 assignment1/data/
-__pycache__/
+**/__pycache__/
 **/.idea/
 **/temp.py
