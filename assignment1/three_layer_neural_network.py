@@ -232,7 +232,7 @@ def main():
     plot_decision_boundary(lambda x: clf.predict(x), X, y)
 
     # # # Train the neural network
-    model = NeuralNetwork(nn_input_dim=2, nn_hidden_dim=3, nn_output_dim=2, actFun_type='relu')
+    model = NeuralNetwork(nn_input_dim=2, nn_hidden_dim=3, nn_output_dim=2, actFun_type='sigmoid')
     model.fit_model(X,y)
     model.visualize_decision_boundary(X,y)
 
