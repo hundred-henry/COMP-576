@@ -58,11 +58,12 @@ from pathlib import Path
 
 from PIL import Image
 import numpy as np
+import matplotlib.pyplot as plt
 
 # hyperparameters
 batch_size = 128
 epochs = 15
-lr = 0.004
+lr = 0.002
 try_cuda = True
 seed = 1000
 
@@ -310,6 +311,29 @@ for epoch in range(1, epochs + 1):
         param_group['lr'] = param_group['lr'] * 0.9
 
 writer.close()
+
+def visualize_filters():
+    # Get the weights of the first convolutional layer
+    # Assuming 'model' is your LeNet5 model
+    first_conv_layer = model.features[0]
+    weights = first_conv_layer.weight.data.cpu().numpy()
+
+    # Plot the weights as grayscale images
+    fig, axes = plt.subplots(4, 8, figsize=(10, 5))  # Adjust the grid size as needed
+    fig.suptitle('First Convolutional Layer Filters')
+
+    for i, ax in enumerate(axes.flat):
+        if i < weights.shape[0]:  # Only plot existing filters
+            # Each filter is of shape (in_channels, height, width), so for grayscale in_channels=1
+            img = weights[i, 0, :, :] if model.grayscale else weights[i].mean(axis=0)
+            ax.imshow(img, cmap='gray')
+            ax.axis('off')
+        else:
+            ax.axis('off')
+
+    plt.show()
+
+visualize_filters()
 
 # Commented out IPython magic to ensure Python compatibility.
 """
