@@ -3,4 +3,5 @@ assignment1/data/
 **/.idea/
 **/temp.py
 
-*/data
+**/data
+**/runs
